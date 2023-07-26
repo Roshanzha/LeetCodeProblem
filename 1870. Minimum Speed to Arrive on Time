@@ -1,0 +1,35 @@
+class Solution {
+    public int minSpeedOnTime(int[] dist, double hour) {
+        int startSpeed = 1, endSpeed = 10000000, maxSpeed = 10000000;
+
+        while (startSpeed <= endSpeed) {
+            int currentSpeed = startSpeed + (endSpeed - startSpeed) / 2;
+
+            double timeRequiredWithCurrentSpeed = getTimeRequiredForCurrentSpeed(dist, currentSpeed);
+
+            if (timeRequiredWithCurrentSpeed <= hour) {
+                endSpeed = currentSpeed - 1;
+            } else {
+                startSpeed = currentSpeed + 1;
+            }
+        }
+
+        return startSpeed > 10000000 ? -1 : startSpeed;
+    }
+
+    public double getTimeRequiredForCurrentSpeed(int[] dist, int speed) {
+        double totalTime = 0;
+
+        for (int i = 0; i < dist.length; i++) {
+            double timeRequiredForCurrent = (double) dist[i] / (double) speed;
+
+            if (i != dist.length - 1) {
+                timeRequiredForCurrent = Math.ceil(timeRequiredForCurrent);
+            }
+
+            totalTime += timeRequiredForCurrent;
+        }
+
+        return totalTime;
+    }
+}
