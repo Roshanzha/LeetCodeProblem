@@ -1,0 +1,32 @@
+class Solution {
+    public long maxRunTime(int n, int[] batteries) {
+        long low = 1;
+        long high = 0;
+        
+        for (int battery : batteries) {
+            high += battery;
+        }
+        
+        while (low <= high) {
+            long mid = low + (high - low) / 2;
+            
+            if (canRunAllComputers(n, batteries, mid)) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+        
+        return high; // high represents the last successful time (maximum time)
+    }
+    
+    private boolean canRunAllComputers(int n, int[] batteries, long time) {
+        long computersRunning = 0;
+        
+        for (int battery : batteries) {
+            computersRunning += Math.min(battery, time);
+        }
+        
+        return computersRunning >= time * n;
+    }
+}
