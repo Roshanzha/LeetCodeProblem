@@ -1,0 +1,32 @@
+import java.util.Arrays;
+import java.util.Comparator;
+
+class Solution {
+    public int jobScheduling(int[] s, int[] e, int[] p) {
+        int n = s.length;
+        Pair[] st = new Pair[n];
+        for (int i = 0; i < n; i++) {
+            st[i] = new Pair(s[i], i);
+        }
+        Arrays.sort(st, Comparator.comparingInt(a -> a.start));
+        int[] dp = new int[n + 1];
+        for (int i = n - 1; i >= 0; i--) {
+            int nextCompatibleIndex = Arrays.binarySearch(st, i + 1, n, new Pair(e[st[i].index], 0),
+                                                      Comparator.comparingInt(a -> a.start));
+            if (nextCompatibleIndex < 0) {
+                nextCompatibleIndex = -nextCompatibleIndex - 1;
+            }
+            dp[i] = Math.max(dp[i + 1], p[st[i].index] + dp[nextCompatibleIndex]);
+        }
+        return dp[0];
+    }
+
+    static class Pair {
+        int start, index;
+
+        public Pair(int start, int index) {
+            this.start = start;
+            this.index = index;
+        }
+    }
+}
