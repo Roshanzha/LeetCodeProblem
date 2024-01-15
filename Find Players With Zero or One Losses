@@ -1,0 +1,42 @@
+
+
+
+/**
+ * @param {number[][]} matches
+ * @return {number[][]}
+ */
+var findWinners = function(matches) {
+    let zeroLoss = new Set();
+    let oneLoss = new Set();
+    let moreLoss = new Set();
+
+    for (let match of matches) {
+        let winner = match[0];
+        let loser = match[1];
+
+        // Add winner.
+        if (!oneLoss.has(winner) && !moreLoss.has(winner)) {
+            zeroLoss.add(winner);
+        }
+
+        // Add or move loser.
+        if (zeroLoss.has(loser)) {
+            zeroLoss.delete(loser);
+            oneLoss.add(loser);
+        } else if (oneLoss.has(loser)) {
+            oneLoss.delete(loser);
+            moreLoss.add(loser);
+        } else if (moreLoss.has(loser)) {
+            continue;
+        } else {
+            oneLoss.add(loser);
+        }
+    }
+
+    let answer = [
+        Array.from(zeroLoss).sort((a, b) => a - b),
+        Array.from(oneLoss).sort((a, b) => a - b)
+    ];
+    
+    return answer;
+};
