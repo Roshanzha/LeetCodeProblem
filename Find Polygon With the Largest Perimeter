@@ -1,0 +1,31 @@
+class Solution {
+    public long largestPerimeter(int[] nums) {
+        Arrays.sort(nums);
+        int n = nums.length;
+
+        long ans = 0;
+        int side = 1;
+        int sideT = 0;
+        long perimter = nums[0];
+
+        int sum = nums[0];
+
+        for (int i = 1; i < n; i++) {
+            side++;
+            perimter += nums[i];
+            if (nums[i] < sum) {
+                if (side >= 3) {
+                    ans = perimter;
+                    sideT = side;
+                    // System.out.println(ans);
+                }
+            }
+            sum += nums[i];
+        }
+
+        if (sideT > 2)
+            return ans;
+        else
+            return -1;
+    }
+}
