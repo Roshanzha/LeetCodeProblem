@@ -1,0 +1,78 @@
+class Solution {
+   public static List<Integer> findAllPeople(int n, int[][] meetings, int firstPerson) {
+
+        int maxMeetTime = 0;
+
+        for(int i = 0; i < meetings.length; i++) maxMeetTime = Math.max(maxMeetTime, meetings[i][2]);
+
+        List<List<int[]>> list = new ArrayList<List<int[]>>();
+        for(int i = 0; i <= maxMeetTime; i++ ) {
+            list.add(new ArrayList<int[]>());
+        }
+
+        for(int i = 0; i < meetings.length; i++) {
+            int time = meetings[i][2];
+            int a = meetings[i][0];
+            int b = meetings[i][1];
+
+            list.get(time).add(new int[]{a,b});
+        }
+
+        
+
+        int parent[] = new int[n];
+        for(int i = 0; i < parent.length; i++) parent[i] = i;
+        parent[firstPerson] = 0;
+        
+        for(int i = 0; i < list.size(); i++) {
+            if ( list.get(i).size() == 0) continue;
+            
+            for(int j = 0; j < list.get(i).size(); j++) {
+                int a = list.get(i).get(j)[0];
+                int b = list.get(i).get(j)[1];
+
+                union(a, b, parent);
+            }
+
+            for(int j = 0; j < list.get(i).size(); j++) {
+                int a = list.get(i).get(j)[0];
+                int b = list.get(i).get(j)[1];
+                find(a, parent);
+                find(b, parent);
+
+                if ( parent[a] != 0 ) parent[a] = a;
+                if ( parent[b] != 0 ) parent[b] = b;
+            }
+
+            
+        }
+
+        List<Integer> result = new ArrayList<Integer>();
+        for(int i = 0; i < parent.length; i++) {
+            find(i, parent);
+
+            if (parent[i] == 0 ) result.add(i);
+        }
+
+        return result;
+    }
+
+
+    private static int find(int a, int[] parent) {
+        if ( a == parent[a] ) return a;
+        return parent[a] = find(parent[a], parent);
+    }
+
+    private static void union(int a, int b, int[] parent) {
+        a = find(a, parent);
+        b = find(b, parent);
+        
+        if ( a != b) {
+            if ( a <= b) {
+                parent[b] = a;
+            } else{
+                parent[a] = b;
+            }
+        }
+    }
+}
